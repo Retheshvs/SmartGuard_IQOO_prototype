@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Device Admin configuration for SmartGuardDeviceAdminReceiver.
+
+    Uses-policies:
+      - WIPE_DATA         : Not used — declared to satisfy some OEM firmware requirements.
+      - LIMIT_PASSWORD    : Not used in main flow.
+
+    The ONLY policy actually exercised is preventing uninstall:
+    DevicePolicyManager.setUninstallBlocked() blocks the package manager from
+    uninstalling SmartGuard until the parent deactivates admin rights via AdminAuthGate.
+    This requires the device admin to be active, which the parent grants once during FirstRunSetup.
+-->
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-policies>
+        <limit-password />
+        <watch-login />
+    </uses-policies>
+</device-admin>

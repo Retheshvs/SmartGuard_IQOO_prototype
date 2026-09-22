@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartGuard</string>
+    <string name="biometric_prompt_title">Admin Verification</string>
+    <string name="biometric_prompt_subtitle">Verify your identity to continue</string>
+    <string name="biometric_prompt_cancel">Cancel</string>
+    <string name="camera_permission_denied">Camera permission is required for identity verification. Please grant it in Settings.</string>
+    <string name="biometric_unavailable">Biometric hardware is unavailable on this device.</string>
+    <string name="no_face_detected">No face detected. Please look directly at the camera.</string>
+    <string name="multiple_faces_detected">Please make sure only one person is facing the camera.</string>
+    <string name="confirming_identity">Confirming identity…</string>
+    <string name="blocked_not_allowed">Not allowed right now</string>
+    <string name="screen_time_label">Screen Time</string>
+    <string name="hand_back_to_parent">Hand Back to Parent</string>
+    <string name="demo_mode_label">DEMO MODE</string>
+
+    <!-- Accessibility Service strings (required by Android when declaring the service) -->
+    <string name="accessibility_service_label">SmartGuard Parental Controls</string>
+    <string name="accessibility_service_description">SmartGuard monitors which app is in the foreground to block restricted apps for child profiles. It does not read screen content, access your passwords, or collect any personal data. This service only looks at app package names — not what you type or view inside apps.</string>
+
+    <!-- Notification channels and text -->
+    <string name="notification_channel_protection_name">SmartGuard Protection</string>
+    <string name="notification_channel_protection_desc">Persistent notification while SmartGuard background protection is active</string>
+    <string name="notification_protection_active_title">SmartGuard Active</string>
+    <string name="notification_protection_active_text">Monitoring foreground apps to protect your child\'s profile</string>
+    <string name="notification_protection_disabled_title">⚠ SmartGuard Protection Disabled</string>
+    <string name="notification_protection_disabled_text">Accessibility Service was turned off. Tap to re-enable protection.</string>
+    <string name="notification_channel_alerts_name">SmartGuard Alerts</string>
+    <string name="notification_channel_alerts_desc">Alerts for protection status changes</string>
+
+    <!-- Device Admin strings -->
+    <string name="admin_receiver_enabled">SmartGuard Admin Rights Activated</string>
+    <string name="admin_receiver_disabled">SmartGuard Admin Rights Deactivated</string>
+    <string name="admin_receiver_disable_warning">Deactivating admin rights will allow the app to be uninstalled. This action should only be performed by a parent.</string>
+</resources>

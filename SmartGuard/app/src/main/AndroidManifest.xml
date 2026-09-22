@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ─────────────────────────────────────────────────
+         Permissions required by SmartGuard
+         NOTE: No android.permission.INTERNET — fully offline by design.
+         ──────────────────────────────────────────────── -->
+
+    <!-- Camera: face detection during enrollment and passive verification -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Biometric: BiometricPrompt used ONLY for AdminAuthGate (settings/enrollment gates) -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <!-- Screen-time tracking via UsageStatsManager -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions"
+        xmlns:tools="http://schemas.android.com/tools"/>
+
+    <!-- Accessibility Service: foreground-app monitoring for access control -->
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+
+    <!-- Boot receiver: restart ForegroundService after device reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Battery optimization: request exemption from Doze during setup -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- Foreground Service: keep monitoring alive while SmartGuard is backgrounded -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+
+    <!-- Post notifications: required on API 33+ for foreground service notification -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Device Admin: prevent uninstall without parent authorization -->
+    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
+
+    <!-- Query all packages: required to list all installed apps for the parent to select allowed ones -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <!-- Hardware features — all optional so app installs on all devices -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="false" />
+
+    <application
+        android:name=".SmartGuardApp"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SmartGuard"
+        android:hardwareAccelerated="true">
+
+        <!-- ─── Main Activity ───────────────────────── -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- ─── Accessibility Service ────────────────
+             Monitors foreground app changes to enforce access control.
+             The user must manually enable this in Android Settings once.
+             ─────────────────────────────────────────── -->
+        <service
+            android:name=".accessibility.SmartGuardAccessibilityService"
+            android:exported="true"
+            android:label="@string/accessibility_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- ─── Foreground Service ───────────────────
+             Keeps monitoring alive when SmartGuard's Activity is swiped away.
+             ─────────────────────────────────────────── -->
+        <service
+            android:name=".service.SmartGuardForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="camera" />
+
+        <!-- ─── Device Admin Receiver ────────────────
+             Prevents uninstall without parent deactivating admin rights first.
+             ─────────────────────────────────────────── -->
+        <receiver
+            android:name=".security.SmartGuardDeviceAdminReceiver"
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin_config" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.DEVICE_ADMIN_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ─── Boot Receiver ────────────────────────
+             Restarts the ForegroundService after device reboot.
+             ─────────────────────────────────────────── -->
+        <receiver
+            android:name=".service.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

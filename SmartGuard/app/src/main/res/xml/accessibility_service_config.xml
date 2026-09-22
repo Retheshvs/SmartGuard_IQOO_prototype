@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SmartGuardAccessibilityService configuration.
+
+    eventTypes:  Only TYPE_WINDOW_STATE_CHANGED — fired when a new Activity/window comes to front.
+                 This gives us the foreground app's package name to check against blocked-app lists.
+    feedbackType: FEEDBACK_GENERIC — we don't produce audio/haptic feedback ourselves.
+    flags:       FLAG_RETRIEVE_INTERACTIVE_WINDOWS — lets us inspect all visible windows,
+                 including the one being blocked. Also enables global action execution
+                 (GLOBAL_ACTION_HOME) needed to dismiss blocked apps.
+    canPerformGestures: false — we only need global actions, not pointer gestures.
+    canRetrieveWindowContent: false — we only need the package name from the event source,
+                               not the full view hierarchy (privacy-preserving).
+-->
+<accessibility-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagRetrieveInteractiveWindows|flagReportViewIds"
+    android:canPerformGestures="false"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/accessibility_service_description"
+    android:notificationTimeout="100"
+    android:settingsActivity="" />
